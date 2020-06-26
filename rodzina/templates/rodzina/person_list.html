@@ -1,11 +1,44 @@
 {% extends "base.html" %}
 
+{% block header %}
+
+<div class="container mt-3 mb-5">
+    <div class="card">
+        <div class="card-body bg-gradient-primary text-white">
+            <h1>Lista dzieci</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
 {% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Nazwisko</th>
+            <th scope="col">Imie</th>
+            <th scope="col">Grupa</th>
+            <th scope="col">Działania</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for child in person_list %}
+        <tr>
+            <td>{{ child.last_name }}</td>
+            <td>{{ child.first_name}}</td>
+            <td>{{ child.group }}</td>
+            <td>
+                <div class="btn-group btn-group-sm gradient-buttonscd" role="group">
+                    <button type="button" class="btn btn-secondary btn-success">Edytuj</button>
+                    <button type="button" class="btn btn-secondary btn-success">Rodzina</button>
+                    <button type="button" class="btn btn-secondary btn-success">Grupa</button>
+                    <button type="button" class="btn btn-secondary btn-success">Rozliczenie</button>
+                </div>
 
-    {% for child in person_list %}
-    <li>
-        {{ child.first_name}} {{ child.last_name }}
-    </li>
-    {% endfor %}
-
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
