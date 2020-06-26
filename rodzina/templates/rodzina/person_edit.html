@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+
+{% block header %}
+
+<div class="container mt-3 mb-5">
+    <div class="card">
+        <div class="card-body bg-gradient-primary text-white">
+            <h1>Edycja osoby</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="card p-5 shadow">
+    <form method="POST">
+        <div class="form-group">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name|add_class:"form-control" }}
+                </div>
+                <div class="col">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name|add_class:"form-control" }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

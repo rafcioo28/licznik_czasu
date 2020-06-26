@@ -28,9 +28,12 @@
             <td>{{ child.last_name }}</td>
             <td>{{ child.first_name}}</td>
             <td>{{ child.group }}</td>
+
             <td>
                 <div class="btn-group btn-group-sm gradient-buttonscd" role="group">
-                    <button type="button" class="btn btn-secondary btn-success">Edytuj</button>
+                    <a href="{% url 'person_edit' child.id %}">
+                        <button type="button" class="btn btn-secondary btn-success">Edytuj</button>
+                    </a>
                     <button type="button" class="btn btn-secondary btn-success">Rodzina</button>
                     <button type="button" class="btn btn-secondary btn-success">Grupa</button>
                     <button type="button" class="btn btn-secondary btn-success">Rozliczenie</button>
