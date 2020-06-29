@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Person
+from .models import Person, Family, Group
 
 
 class PersonForm(ModelForm):
@@ -11,4 +11,21 @@ class PersonForm(ModelForm):
             'type_of_person',
             'group',
             'family',
+        ]
+
+
+class FamilyForm(ModelForm):
+    class Meta:
+        model = Family
+        fields = [
+            'name',
+            'rfid',
+        ]
+
+
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = [
+            'name',
         ]

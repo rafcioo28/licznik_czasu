@@ -5,7 +5,7 @@
 <div class="container mt-3 mb-5">
     <div class="card">
         <div class="card-body bg-gradient-primary text-white">
-            <h1>Lista dzieci</h1>
+            <h1>Lista rodziń</h1>
         </div>
     </div>
 </div>
@@ -16,32 +16,27 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">Nazwisko</th>
-            <th scope="col">Imie</th>
-            <th scope="col">Grupa</th>
+            <th scope="col">Nazwa rodziny</th>
+            <th scope="col">KOD RFID</th>
+            <th scope="col">Liczba dzieci</th>
             <th scope="col">Działania</th>
         </tr>
     </thead>
     <tbody>
-        {% for child in person_list %}
+        {% for family in family_list %}
         <tr>
-            <td>{{ child.last_name }}</td>
-            <td>{{ child.first_name}}</td>
-            <td>{{ child.group }}</td>
+            <td>{{ family.name }}</td>
+            <td>{{ family.rfid }}</td>
+            <td>{{ family.children_count }}</td>
 
             <td>
                 <div class="btn-group btn-group-sm gradient-buttonscd" role="group">
 
-                    <a href="{% url 'person_edit' child.id %}" class="btn btn-secondary btn-success">Edytuj</a>
-
-
-                    <a href="{% url 'family_edit' child.family.id %}" class="btn btn-secondary btn-success">Rodzina</a>
-
-
-                    <a href="{% url 'group_edit' child.group.id %}" class="btn btn-secondary btn-success">Grupa</a>
+                    <a href="{% url 'family_edit' family.id %}" class="btn btn-secondary btn-success">Edytuj</a>
 
                     <a class="btn btn-secondary btn-success">Rozliczenie</a>
                 </div>
+
 
             </td>
         </tr>

@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'bootstrap4',
     'widget_tweaks',
+    'rest_framework',
     'rodzina',
     'rozliczenie',
 ]

@@ -3,7 +3,9 @@ autopep8==1.5.3
 beautifulsoup4==4.9.1
 Django==3.0.7
 django-bootstrap4==2.0.1
+django-popup-field==0.1.6
 django-widget-tweaks==1.4.8
+djangorestframework==3.11.0
 flake8==3.8.3
 mccabe==0.6.1
 pycodestyle==2.6.0

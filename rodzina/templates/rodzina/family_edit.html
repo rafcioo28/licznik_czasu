@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+
+{% block header %}
+
+<div class="container mt-3 mb-5">
+    <div class="card">
+        <div class="card-body bg-gradient-primary text-white">
+            <h1>Edycja Rodziny</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <div class="card p-5 shadow">
+        <div class="form-group">
+            {% csrf_token %}
+            <div class="form-row mb-5">
+                <div class="col">
+                    {{ form.name.label_tag }}
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+                <div class="col">
+                    {{ form.rfid.label_tag }}
+                    {{ form.rfid|add_class:"form-control" }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </div>
+    </div>
+    <div class="cart p5 shadow">
+        <div class="card-body bg-gradient-secondary text-white">
+            <h3>Członkowie rodziny</h3>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nazwisko</th>
+                    <th scope="col">Imie</th>
+                    <th scope="col">Działania</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                        <h6 class="text-center">Rodzice/Opiekunowie</h6>
+                    </td>
+                </tr>
+
+                {% for person in family.get_tutor %}
+                <tr>
+                    <td>{{ person.last_name }}</td>
+                    <td>{{ person.first_name }}</td>
+                    <td>
+                        <a href="{% url 'person_edit' person.id %}"
+                            class="btn btn-secondary btn-success btn-sm">Edytuj</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3">
+                        <h6 class="text-center">Dzieci</h6>
+                    </td>
+                </tr>
+                {% for person in family.get_children %}
+                <tr>
+                    <td>{{ person.last_name }}</td>
+                    <td>{{ person.first_name }}</td>
+                    <td>
+                        <a href="{% url 'person_edit' person.id %}"
+                            class="btn btn-secondary btn-success btn-sm">Edytuj</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+{% endblock %}

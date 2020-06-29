@@ -29,6 +29,20 @@
                     {{ form.first_name|add_class:"form-control" }}
                 </div>
             </div>
+            <div class="form-row mt-5 mb-5">
+                <div class="col">
+                    {{ form.type_of_person.label_tag }}
+                    {{ form.type_of_person|add_class:"form-control" }}
+                </div>
+                <div class="col">
+                    {{ form.family.label_tag }}
+                    {{ form.family|add_class:"form-control" }}
+                </div>
+                <div class="col">
+                    {{ form.group.label_tag }}
+                    {{ form.group|add_class:"form-control" }}
+                </div>
+            </div>
             <button type="submit" class="btn btn-primary">Zapisz</button>
         </div>
     </form>

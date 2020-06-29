@@ -5,7 +5,7 @@ class Group(models.Model):
     name = models.CharField(max_length=100, verbose_name='nazwa')
 
     class Meta:
-        verbose_name = 'Grupa'
+        verbose_name = 'Nazwa'
         verbose_name_plural = 'Grupy'
 
     def __str__(self):
@@ -19,6 +19,15 @@ class Family(models.Model):
     class Meta:
         verbose_name = 'Rodzina'
         verbose_name_plural = 'Rodziny'
+
+    def children_count(self):
+        return self.people.filter(type_of_person='C').count()
+
+    def get_children(self):
+        return self.people.filter(type_of_person='C')
+
+    def get_tutor(self):
+        return self.people.filter(type_of_person='T')
 
     def __str__(self):
         return f'{self.name} [{self.rfid}]'
@@ -42,7 +51,7 @@ class Person(models.Model):
         verbose_name='Rodzina')
     group = models.ForeignKey(
         Group, on_delete=models.CASCADE, related_name='children',
-        blank=True, null=True)
+        blank=True, null=True, verbose_name='Grupa')
 
     class Meta:
         verbose_name = 'Osoba'
