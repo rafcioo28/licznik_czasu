@@ -56,13 +56,15 @@
                     <td>{{ person.last_name }}</td>
                     <td>{{ person.first_name }}</td>
                     <td>
-                        <a href="{% url 'person_edit' person.id %}"
-                            class="btn btn-secondary btn-success btn-sm">Edytuj</a>
+                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                            data-target="#myModal" data-id_person="{{ person.id }}">
+                            Edytuj
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
                 <tr>
-                    <td colspan="3">
+                    <td colspan=" 3">
                         <h6 class="text-center">Dzieci</h6>
                     </td>
                 </tr>
@@ -71,8 +73,10 @@
                     <td>{{ person.last_name }}</td>
                     <td>{{ person.first_name }}</td>
                     <td>
-                        <a href="{% url 'person_edit' person.id %}"
-                            class="btn btn-secondary btn-success btn-sm">Edytuj</a>
+                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                            data-target="#myModal" data-id_person="{{ person.id }}">
+                            Edytuj
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -80,4 +84,54 @@
         </table>
     </div>
 </form>
+{% endblock %}
+
+{% block modals%}
+<!-- Modal -->
+<form id="modal_person_update">
+    {% csrf_token %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edycja osoby</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="last_name_ajx">Nazwisko:</label>
+                            <input type="text" class="form-control" id="last_name_ajx">
+                        </div>
+                        <div class="col">
+                            <label for="first_name_ajx">Imię:</label>
+                            <input type="text" class="form-control" id="first_name_ajx">
+                        </div>
+                    </div>
+                    <div class="form-row pt-3">
+                        <div class="col-6">
+                            <label for="last_name_ajx">Typ osoby</label>
+                            <select class="custom-select" id="type_of_person_ajx">
+                                <option value="T">Opiekun</option>
+                                <option value="C">Dziecko</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type='hidden' id="id_person_ajx">
+                    <input type='hidden' id="id_family_ajx">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    <button type="button" class="btn btn-primary" id="save_button">Zapisz zmiany</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+
+</script>
 {% endblock %}

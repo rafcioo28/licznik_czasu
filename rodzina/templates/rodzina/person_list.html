@@ -37,8 +37,9 @@
 
                     <a href="{% url 'family_edit' child.family.id %}" class="btn btn-secondary btn-success">Rodzina</a>
 
-
+                    {% if child.group.id != None %}
                     <a href="{% url 'group_edit' child.group.id %}" class="btn btn-secondary btn-success">Grupa</a>
+                    {% endif %}
 
                     <a class="btn btn-secondary btn-success">Rozliczenie</a>
                 </div>

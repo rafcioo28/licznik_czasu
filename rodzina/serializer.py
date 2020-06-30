@@ -11,5 +11,4 @@ class PersonSerializer(serializers.ModelSerializer):
             'last_name',
             'type_of_person',
             'family',
-            'group',
         ]

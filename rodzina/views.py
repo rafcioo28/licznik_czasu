@@ -1,4 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from rest_framework.response import Response
 from django.views import generic
 from rest_framework.views import APIView
@@ -33,10 +35,23 @@ def person_edit(request, id):
 
 
 class PersonViewAPI(APIView):
+
     def get(self, request, person_id):
-        person = Person.objects.filter(id=person_id)
-        serializer = PersonSerializer(person, many=True)
+        person = Person.objects.filter(id=person_id).first()
+        serializer = PersonSerializer(person, many=False)
         return Response(serializer.data)
+
+    def post(self, request, person_id):
+        person = Person.objects.filter(id=person_id).first()
+        serializer = PersonSerializer(person, data=request.data)
+        # person.last_name = request.PUT['last_name']
+        # person.first_name = request.PUT['first_name']
+        # person.type_of_person = request.PUT['type_of_person']
+        if serializer.is_valid():
+            print('serializer is valid')
+
+        # person.save()
+        return redirect(reverse('family_edit', args=[person.family.id]))
 
 
 def family_edit(request, id):
