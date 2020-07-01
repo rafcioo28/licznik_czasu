@@ -1,19 +1,44 @@
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+
 from rest_framework.response import Response
-from django.views import generic
 from rest_framework.views import APIView
+from .serializer import PersonSerializer
+
+from django.views import generic
+from django.urls import reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+
 from .forms import PersonForm, FamilyForm, GroupForm
 from .models import Person, Family, Group
-from .serializer import PersonSerializer
 
 
 class ChildrenListView(generic.ListView):
     model = Person
+    template_name = 'rodzina/children_list.html'
+    fields = [
+        'first_name',
+        'last_name',
+        'group',
+    ]
 
     def get_queryset(self):
         return Person.objects.filter(type_of_person='C')
+
+
+class TutorListView(generic.ListView):
+    model = Person
+    template_name = 'rodzina/tutor_list.html'
+    fields = [
+        'first_name',
+        'last_name',
+    ]
+
+    def get_queryset(self):
+        return Person.objects.filter(type_of_person='T')
 
 
 class FamilyListView(generic.ListView):
@@ -24,14 +49,21 @@ class GroupListView(generic.ListView):
     model = Group
 
 
-def person_edit(request, id):
-    person = get_object_or_404(Person, pk=id)
-    form = PersonForm(request.POST or None, instance=person)
+class PersonUpdate(UpdateView):
+    model = Person
+    fields = [
+        'first_name',
+        'last_name',
+        'type_of_person',
+        'family',
+        'group',
+    ]
 
-    if form.is_valid():
-        form.save()
-
-    return render(request, 'rodzina/person_edit.html', {'form': form})
+    def get_success_url(self):
+        if self.request.POST['type_of_person'] == 'C':
+            return reverse_lazy('children')
+        else:
+            return reverse_lazy('tutor')
 
 
 class PersonViewAPI(APIView):

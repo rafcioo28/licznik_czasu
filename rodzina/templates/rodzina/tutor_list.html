@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<div class="container mt-3 mb-5">
+    <div class="card">
+        <div class="card-body bg-gradient-primary text-white">
+            <h1>Lista opiekunów</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Nazwisko</th>
+            <th scope="col">Imie</th>
+            <th scope="col">Działania</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tutor in person_list %}
+        <tr>
+            <td>{{ tutor.last_name }}</td>
+            <td>{{ tutor.first_name}}</td>
+
+            <td>
+                <div class="btn-group btn-group-sm gradient-buttonscd" role="group">
+
+                    <a href="{% url 'person_edit' tutor.id %}" class="btn btn-secondary btn-success">Edytuj</a>
+
+
+                    <a href="{% url 'family_edit' tutor.family.id %}" class="btn btn-secondary btn-success">Rodzina</a>
+
+                    <a class="btn btn-secondary btn-success">Rozliczenie</a>
+                </div>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
