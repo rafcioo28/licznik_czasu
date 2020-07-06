@@ -5,7 +5,13 @@
 <div class="container mt-3 mb-5">
     <div class="card">
         <div class="card-body bg-gradient-primary text-white">
-            <h1>Lista dzieci</h1>
+            <div class="row">
+                <div class="col-md-3">
+                    <h1>Lista dzieci</h1>
+                </div>
+                <div class="col-md-3"><a href="{% url 'person_new' %}" class="btn btn-secondary btn-warning">Dodaj
+                        osobę</a></div>
+            </div>
         </div>
     </div>
 </div>
@@ -42,11 +48,91 @@
                     {% endif %}
 
                     <a class="btn btn-secondary btn-success">Rozliczenie</a>
+                    <button type="button" class="btn-sm btn-secondary btn-danger confirm-delete" data-toggle="modal"
+                        data-target="#deleteConfirm" data-id_person="{{ child.id }}">Usuń</button>
                 </div>
+
 
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Czy usunąć osobę?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="id_person">
+                <div class="personName"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmButton">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% csrf_token %}
+<script>
+    const csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    $('#deleteConfirm').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget)
+        var id_person = button.data('id_person')
+
+        $.ajax({
+            type: 'GET',
+            url: '/person/' + id_person + '/delete/',
+            dataType: 'json',
+            success: function (data) {
+                var person = JSON.parse(data)[0].fields
+                $('.personName').text(person.first_name + ' ' + person.last_name)
+                $('#id_person').val(id_person)
+
+            },
+            error: function () {
+                $('#errors').val(`error`);
+            }
+
+        })
+    })
+
+    $('#confirmButton').on('click', function () {
+        var id_person = $('#id_person').val()
+        $.ajax({
+            type: 'POST',
+            url: '/person/' + id_person + '/delete/',
+            data: {
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post',
+            },
+            success: function () {
+                window.location.reload(false);
+            },
+            error: function (xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            },
+        })
+    })
+</script>
 {% endblock %}

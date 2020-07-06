@@ -5,7 +5,13 @@
 <div class="container mt-3 mb-5">
     <div class="card">
         <div class="card-body bg-gradient-primary text-white">
-            <h1>Lista opiekunów</h1>
+            <div class="row">
+                <div class="col-md-4">
+                    <h1>Lista opiekunów</h1>
+                </div>
+                <div class="col-md-3"><a href="{% url 'person_new' %}" class="btn btn-secondary btn-warning">Dodaj
+                        osobę</a></div>
+            </div>
         </div>
     </div>
 </div>
@@ -36,6 +42,8 @@
                     <a href="{% url 'family_edit' tutor.family.id %}" class="btn btn-secondary btn-success">Rodzina</a>
 
                     <a class="btn btn-secondary btn-success">Rozliczenie</a>
+                    <button type="button" class="btn-sm btn-secondary btn-danger confirm-delete" data-toggle="modal"
+                        data-target="#deleteConfirm" data-id_person="{{ tutor.id }}">Usuń</button>
                 </div>
 
             </td>
@@ -43,4 +51,28 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+    <form id="modalPerson">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Czy usunąć osobę?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_person">
+                    <div class="personName"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmButton">Potwierdź</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}

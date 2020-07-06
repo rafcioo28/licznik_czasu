@@ -1,22 +1,20 @@
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .serializer import PersonSerializer
-
-from django.views import generic
+from django.http import HttpResponse, JsonResponse
+from django.core import serializers
+from django.views.generic.detail import SingleObjectMixin
+from django.views import generic, View
 from django.urls import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView
 
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import PersonForm, FamilyForm, GroupForm
+from django.shortcuts import render, get_object_or_404
+
+from .forms import FamilyForm, GroupForm
 from .models import Person, Family, Group
 
 
-class ChildrenListView(generic.ListView):
+class ChildrenListView(LoginRequiredMixin, generic.ListView):
+
     model = Person
     template_name = 'rodzina/children_list.html'
     fields = [
@@ -29,7 +27,7 @@ class ChildrenListView(generic.ListView):
         return Person.objects.filter(type_of_person='C')
 
 
-class TutorListView(generic.ListView):
+class TutorListView(LoginRequiredMixin, generic.ListView):
     model = Person
     template_name = 'rodzina/tutor_list.html'
     fields = [
@@ -41,15 +39,18 @@ class TutorListView(generic.ListView):
         return Person.objects.filter(type_of_person='T')
 
 
-class FamilyListView(generic.ListView):
-    model = Family
+class PersonCreate(LoginRequiredMixin, CreateView):
+    model = Person
+    fields = '__all__'
+
+    def get_success_url(self):
+        if self.request.POST['type_of_person'] == 'C':
+            return reverse_lazy('children')
+        else:
+            return reverse_lazy('tutor')
 
 
-class GroupListView(generic.ListView):
-    model = Group
-
-
-class PersonUpdate(UpdateView):
+class PersonUpdate(LoginRequiredMixin, UpdateView):
     model = Person
     fields = [
         'first_name',
@@ -66,24 +67,31 @@ class PersonUpdate(UpdateView):
             return reverse_lazy('tutor')
 
 
-class PersonViewAPI(APIView):
+class PersonDeleteAjax(LoginRequiredMixin, SingleObjectMixin, View):
+    model = Person
 
-    def get(self, request, person_id):
-        person = Person.objects.filter(id=person_id).first()
-        serializer = PersonSerializer(person, many=False)
-        return Response(serializer.data)
+    def get(self, *args, **kwargs):
+        self.object = [self.get_object()]
+        data = serializers.serialize("json", self.object)
+        return JsonResponse(data, safe=False)
 
-    def post(self, request, person_id):
-        person = Person.objects.filter(id=person_id).first()
-        serializer = PersonSerializer(person, data=request.data)
-        # person.last_name = request.PUT['last_name']
-        # person.first_name = request.PUT['first_name']
-        # person.type_of_person = request.PUT['type_of_person']
-        if serializer.is_valid():
-            print('serializer is valid')
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponse(status=204)
 
-        # person.save()
-        return redirect(reverse('family_edit', args=[person.family.id]))
+
+class FamilyListView(generic.ListView):
+    model = Family
+
+
+class FamilyUpdate(UpdateView):
+    model = Family
+    fields = '__all__'
+
+
+class GroupListView(generic.ListView):
+    model = Group
 
 
 def family_edit(request, id):
