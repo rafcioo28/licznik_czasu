@@ -1,13 +1,12 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from django.contrib.auth import views as auth_views
 from .views import (
     ChildrenListView,
     TutorListView,
     FamilyListView,
+    FamilyUpdate,
     GroupListView,
-    family_edit,
-    group_edit,
+    GrupUpdate,
     PersonCreate,
     PersonUpdate,
     PersonDeleteAjax,
@@ -29,10 +28,9 @@ urlpatterns = [
         name='person_delete'),
 
     path('family_list/', FamilyListView.as_view(), name='family_list'),
-    # path('family/<int:pk>/, FamilyUpdate.as_view()'),
+    path('family/<int:pk>/', FamilyUpdate.as_view(), name='family_edit'),
     path('group_list/', GroupListView.as_view(), name='group_list'),
-    path('family_edit/<int:id>/', family_edit, name='family_edit'),
-    path('group_edit/<int:id>/', group_edit, name='group_edit'),
+    path('group/<int:pk>/', GrupUpdate.as_view(), name='group_edit'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

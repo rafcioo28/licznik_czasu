@@ -6,15 +6,10 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from django.shortcuts import render, get_object_or_404
-
-from .forms import FamilyForm, GroupForm
 from .models import Person, Family, Group
 
 
 class ChildrenListView(LoginRequiredMixin, generic.ListView):
-
     model = Person
     template_name = 'rodzina/children_list.html'
     fields = [
@@ -88,30 +83,14 @@ class FamilyListView(generic.ListView):
 class FamilyUpdate(UpdateView):
     model = Family
     fields = '__all__'
+    success_url = reverse_lazy('family_list')
 
 
 class GroupListView(generic.ListView):
     model = Group
 
 
-def family_edit(request, id):
-    family = get_object_or_404(Family, pk=id)
-    form = FamilyForm(request.POST or None, instance=family)
-
-    if form.is_valid():
-        form.save()
-
-    return render(
-        request,
-        'rodzina/family_edit.html',
-        {'form': form, 'family': family})
-
-
-def group_edit(request, id):
-    group = get_object_or_404(Group, pk=id)
-    form = GroupForm(request.POST or None, instance=group)
-
-    if form.is_valid():
-        form.save()
-
-    return render(request, 'rodzina/group_edit.html', {'form': form})
+class GrupUpdate(UpdateView):
+    model = Group
+    fields = '__all__'
+    success_url = reverse_lazy('group_list')
