@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block header %}
+
+<div class="container mt-3 mb-5">
+    <div class="card">
+        <div class="card-body bg-gradient-primary text-white">
+            <h1>Lista rodzin</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Nazwa grupy</th>
+            <th scope="col">Liczba dzieci</th>
+            <th scope="col">Działania</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in group_list %}
+        <tr>
+            <td>{{ group.name }}</td>
+            <td>{{ group.children.count }}</td>
+
+            <td>
+                <div class="btn-group btn-group-sm gradient-buttonscd" role="group">
+
+                    <a href="{% url 'group_edit' group.id %}" class="btn btn-secondary btn-success">Edytuj</a>
+
+                    <a class="btn btn-secondary btn-success">Rozliczenie</a>
+                </div>
+
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

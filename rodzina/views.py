@@ -62,6 +62,20 @@ class PersonUpdate(LoginRequiredMixin, UpdateView):
             return reverse_lazy('tutor')
 
 
+class PersonJSON(LoginRequiredMixin, SingleObjectMixin, View):
+    model = Person
+
+    def get(self, *args, **kwargs):
+        self.object = [self.get_object()]
+        data = serializers.serialize("json", self.object)
+        return JsonResponse(data, safe=False)
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        print(self.object)
+        return HttpResponse(status=204)
+
+
 class PersonDeleteAjax(LoginRequiredMixin, SingleObjectMixin, View):
     model = Person
 
