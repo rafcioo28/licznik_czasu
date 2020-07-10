@@ -185,6 +185,8 @@
             }
         }
     });
+
+    //--------------- Delete confirm -------------------------
     $('#deleteConfirm').on('show.bs.modal', function (e) {
         var button = $(e.relatedTarget)
         var id_person = button.data('id_person')
@@ -195,7 +197,7 @@
             dataType: 'json',
             success: function (data) {
                 var person = JSON.parse(data)[0].fields
-                $('#last_name_ajxe').text(person.first_name + ' ' + person.last_name)
+                $('.personName').text(person.first_name + ' ' + person.last_name)
                 $('#id_person').val(id_person)
 
             },
@@ -223,28 +225,34 @@
             },
         })
     })
+    //---------------- Delete confirm end
+
 
     $('#new_person').on('click', function () {
+        /* beautify ignore:start */
         var family_id = {{ family.id }}
+        /* beautify ignore:end */
         $('#last_name_ajx').val('')
         $('#first_name_ajx').val('')
-        $('#type_of_person_ajx').val('')
+        $('#type_of_person_ajx').val('T')
         $('#id_person_ajx').val('')
         $('#id_family_ajx').val(family_id)
+        $('#first_name_ajx').removeClass('is-invalid')
+        $('#last_name_ajx').removeClass('is-invalid')
     })
 
     $('#person_modal').on('show.bs.modal', function (e) {
+        $('#first_name_ajx').removeClass('is-invalid')
+        $('#last_name_ajx').removeClass('is-invalid')
         var button = $(e.relatedTarget)
         var id_person = button.data('id_person')
-        console.log(id_person == null)
-        if (id_person == null) {
+        if (id_person != null) {
             $.ajax({
                 type: 'GET',
                 url: '/person/' + id_person + '/json/',
                 dataType: 'json',
                 success: function (data) {
                     var person = JSON.parse(data)[0].fields
-                    console.log(person.last_name)
                     $('#last_name_ajx').val(person.last_name)
                     $('#first_name_ajx').val(person.first_name)
                     $('#type_of_person_ajx').val(person.type_of_person)
@@ -257,6 +265,42 @@
                 }
 
             })
+        }
+    })
+
+    $('#save_button').on('click', function (e) {
+        $('#first_name_ajx').removeClass('is-invalid')
+        $('#last_name_ajx').removeClass('is-invalid')
+        var id_person = $('#id_person_ajx').val()
+        var url = (id_person != '') ? '/person/' + id_person + '/json/' : '/person/new/json/';
+
+        if ($('#first_name_ajx').val() && $('#last_name_ajx').val()) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    first_name: $('#first_name_ajx').val(),
+                    last_name: $('#last_name_ajx').val(),
+                    type_of_person: $('#type_of_person_ajx').val(),
+                    family: $('#id_family_ajx').val(),
+                    action: 'post',
+                },
+                success: function () {
+                    window.location.reload(false);
+                },
+                error: function () {
+                    $('#errors').val('error');
+                }
+            })
+        } else {
+            if ($('#first_name_ajx').val() == '') {
+                $('#first_name_ajx').addClass('is-invalid')
+            }
+            if ($('#last_name_ajx').val() == '') {
+                $('#last_name_ajx').addClass('is-invalid')
+            }
         }
     })
 </script>

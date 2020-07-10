@@ -70,9 +70,24 @@ class PersonJSON(LoginRequiredMixin, SingleObjectMixin, View):
         data = serializers.serialize("json", self.object)
         return JsonResponse(data, safe=False)
 
-    def post(self, *args, **kwargs):
-        self.object = self.get_object()
-        print(self.object)
+    def post(self, request, *args, **kwargs):
+        person = self.get_object()
+        person.first_name = self.request.POST['first_name']
+        person.last_name = self.request.POST['last_name']
+        person.type_of_person = self.request.POST['type_of_person']
+        person.save()
+        return HttpResponse(status=204)
+
+
+class PersonNewAjax(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        Person.objects.create(
+            first_name=self.request.POST['first_name'],
+            last_name=self.request.POST['last_name'],
+            type_of_person=self.request.POST['type_of_person'],
+            family=Family.objects.get(pk=self.request.POST['family'])
+        )
         return HttpResponse(status=204)
 
 

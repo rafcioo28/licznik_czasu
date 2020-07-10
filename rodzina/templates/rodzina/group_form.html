@@ -29,4 +29,31 @@
         </div>
     </form>
 </div>
+
+<div class="cart p5 shadow">
+    <div class="card-body bg-gradient-secondary text-white">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Dzieci w grupie</h3>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nazwisko</th>
+                <th scope="col">Imie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for child in group.children.all %}
+            <tr>
+                <td>{{ child.last_name }}</td>
+                <td>{{ child.first_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% endblock %}

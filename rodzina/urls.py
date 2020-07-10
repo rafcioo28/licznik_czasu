@@ -9,6 +9,7 @@ from .views import (
     GrupUpdate,
     PersonCreate,
     PersonJSON,
+    PersonNewAjax,
     PersonUpdate,
     PersonDeleteAjax,
 )
@@ -20,13 +21,17 @@ urlpatterns = [
 
     path('person/new/', PersonCreate.as_view(), name='person_new'),
     path(
-        'person/<int:pk>',
+        'person/<int:pk>/',
         PersonUpdate.as_view(),
         name='person_edit'),
     path(
         'person/<int:pk>/json/',
         PersonJSON.as_view(),
         name='person_ajax'),
+    path(
+        'person/new/json/',
+        PersonNewAjax.as_view(),
+        name='person_new_ajax'),
     path(
         'person/<int:pk>/delete/',
         PersonDeleteAjax.as_view(),
