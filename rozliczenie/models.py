@@ -13,4 +13,5 @@ class TimeCount(models.Model):
         verbose_name_plural = 'Znaczniki czasu'
 
     def __str__(self):
-        return f'{self.child.first_name} {self.child.last_name} - {self.time_stamp}'
+        return f'{self.child.first_name} \
+                {self.child.last_name} - {self.time_stamp}'

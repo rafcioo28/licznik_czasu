@@ -1,5 +1,4 @@
 from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
 from .views import (
     ChildrenListView,
     TutorListView,
@@ -42,5 +41,3 @@ urlpatterns = [
     path('group_list/', GroupListView.as_view(), name='group_list'),
     path('group/<int:pk>/', GrupUpdate.as_view(), name='group_edit'),
 ]
-
-urlpatterns = format_suffix_patterns(urlpatterns)

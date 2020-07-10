@@ -1,21 +1,26 @@
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import View
-from django.shortcuts import render
+from django.views.generic import FormView, DetailView
+
+
+from rodzina.models import Family, Person
 from .forms import FormRFID
 
 
-class EnterRFID(LoginRequiredMixin, View):
-    form_rfid = FormRFID
-    template_name = 'rozenter_rfid.html'
+class EnterRFID(LoginRequiredMixin, FormView):
+    form_class = FormRFID
+    template_name = 'rozliczenie/enter_rfid.html'
+    success_url = '/enter/'
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
+    def post(self, request):
+        family = get_object_or_404(Family, rfid=request.POST['rfid_number'])
+        print(family)
+        return HttpResponseRedirect(reverse_lazy(
+            'family_action', args=[family.pk]))
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            # <process form cleaned data>
-            return HttpResponseRedirect('/success/')
 
-        return render(request, self.template_name, {'form': form})
+class FamilyAction(LoginRequiredMixin, DetailView):
+    model = Family
+    template_name = 'rozliczenie/children_list.html'
