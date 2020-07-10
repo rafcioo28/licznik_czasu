@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render
+from .forms import FormRFID
 
 
 class EnterRFID(LoginRequiredMixin, View):
