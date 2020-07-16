@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     ChildrenListView,
     TutorListView,
+    FamilyCreate,
     FamilyListView,
     FamilyUpdate,
     GroupListView,
@@ -11,6 +12,8 @@ from .views import (
     PersonNewAjax,
     PersonUpdate,
     PersonDeleteAjax,
+    RFIDDeleteAjax,
+    RFIDNewAjax,
 )
 
 
@@ -36,8 +39,22 @@ urlpatterns = [
         PersonDeleteAjax.as_view(),
         name='person_delete'),
 
+
+    path('family/new/', FamilyCreate.as_view(), name='family_new'),
     path('family_list/', FamilyListView.as_view(), name='family_list'),
     path('family/<int:pk>/', FamilyUpdate.as_view(), name='family_edit'),
+
+    path(
+        'rfid/<int:pk>/delete/',
+        RFIDDeleteAjax.as_view(),
+        name='rfid_delete'),
+
+    path(
+        'rfid/new/',
+        RFIDNewAjax.as_view(),
+        name='rfid_new_ajax'
+    ),
+
     path('group_list/', GroupListView.as_view(), name='group_list'),
     path('group/<int:pk>/', GrupUpdate.as_view(), name='group_edit'),
 ]

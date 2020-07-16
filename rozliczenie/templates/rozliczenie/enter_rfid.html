@@ -4,7 +4,14 @@
 {% block content %}
 <form method="POST">
     {% csrf_token %}
-    {{ form }}
+    <div style="//position: absolute; top: -1000px">
+        {{ form }}
+    </div>
 </form>
+<script>
+    document.onmousedown = (e) => {
+        e.preventDefault();
+    }
+</script>
 
 {% endblock %}

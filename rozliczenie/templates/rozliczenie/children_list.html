@@ -4,4 +4,8 @@
 {% block content %}
 Children list
 
+{% for person in family.get_children %}
+<p>{{ person.first_name }}</p>
+{% endfor %}
+
 {% endblock %}

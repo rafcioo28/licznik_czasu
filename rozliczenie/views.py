@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, DetailView
 
 
-from rodzina.models import Family, Person
+from rodzina.models import Family, Person, RFID
 from .forms import FormRFID
 
 
@@ -15,8 +15,9 @@ class EnterRFID(LoginRequiredMixin, FormView):
     success_url = '/enter/'
 
     def post(self, request):
-        family = get_object_or_404(Family, rfid=request.POST['rfid_number'])
-        print(family)
+        rfid = get_object_or_404(
+            RFID, rfid_number=request.POST['rfid_number'])
+        family = get_object_or_404(Family, pk=rfid.family.id)
         return HttpResponseRedirect(reverse_lazy(
             'family_action', args=[family.pk]))
 

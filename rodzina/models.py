@@ -14,7 +14,6 @@ class Group(models.Model):
 
 class Family(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nazwisko')
-    rfid = models.PositiveIntegerField(verbose_name='Kod RFID')
 
     class Meta:
         verbose_name = 'Rodzina'
@@ -30,7 +29,18 @@ class Family(models.Model):
         return self.people.filter(type_of_person='T')
 
     def __str__(self):
-        return f'{self.name} [{self.rfid}]'
+        return f'{self.name}'
+
+
+class RFID(models.Model):
+    rfid_number = models.PositiveIntegerField(
+        unique=True, verbose_name='Kod RFID')
+    family = models.ForeignKey(
+        Family, on_delete=models.CASCADE, related_name='rfids',
+        verbose_name='Rodzina')
+
+    def __str__(self):
+        return f'{self.rfid_number}'
 
 
 class Person(models.Model):

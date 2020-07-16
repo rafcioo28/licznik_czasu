@@ -17,22 +17,43 @@
 {% block content %}
 <form method="POST">
     <div class="card p-5 shadow">
-        <div class="form-group">
-            {% csrf_token %}
-            <div class="form-row mb-5">
-                <div class="col">
-                    {{ form.name.label_tag }}
-                    {{ form.name|add_class:"form-control" }}
-                </div>
-                <div class="col">
-                    {{ form.rfid.label_tag }}
-                    {{ form.rfid|add_class:"form-control" }}
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="form-group">
+                    {% csrf_token %}
+                    <div class="form-row mb-5">
+                        <div class="col">
+                            {{ form.name.label_tag }}
+                            {{ form.name|add_class:"form-control" }}
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <div class="col-md-5  offset-md-3">
+                <div class=" card" style="width: 15rem;">
+                    <div class="card-header">
+                        <span class="pr-4">Numery kart</span> <i id="new_rfid" data-toggle="modal"
+                            data-target="#rfid_modal" class="fa fa-plus" style="cursor: pointer;"></i>
+                    </div>
+                    <table class="table table-sm">
+                        <tbody>
+                            {% for rfid in family.rfids.all %}
+                            <tr>
+                                <td class="mx-5">{{ rfid }}</td>
+                                <td><i class="fa fa-trash" data-rfid="{{ rfid.id }}" data-toggle="modal"
+                                        data-target="#deleteConfirmRFID" style="cursor: pointer;"></i></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
         </div>
     </div>
-    <div class="cart p5 shadow">
+    <div class=" cart p5 shadow">
         <div class="card-body bg-gradient-secondary text-white">
             <div class="row">
                 <div class="col-md-4">
@@ -40,7 +61,8 @@
                 </div>
                 <div class="col-md-3">
                     <buttpm type="button" class="btn btn-secondary btn-warning" id="new_person" data-toggle="modal"
-                        data-target="#person_modal">Dodaj
+                        data-target="#person_modal">
+                        Dodaj
                         osobę</buttpm>
                 </div>
             </div>
@@ -99,16 +121,14 @@
         </table>
     </div>
 </form>
+{% csrf_token %}
 {% endblock %}
 
 {% block modals%}
 <!-- Modal edycji osoby  -->
-
-
 <div class="modal fade" id="person_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <form id="modal_person_update">
-        {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -171,6 +191,57 @@
     </div>
 </div>
 
+
+<!-- Modal usuwania rfid  -->
+<div class="modal fade" id="deleteConfirmRFID" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Czy usunąć kartę?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="rfid">
+                <div class="rfidNumber"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmButtonRFID">Potwierdź</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nowy RFID  -->
+<div class="modal fade" id="rfid_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edycja osoby</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col">
+                        <label for="rfid_ajx">Numer karty: </label><span id="rfid_error" class="text-danger"></span>
+                        <input type="text" class="form-control" id="rfid_ajx">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type='hidden' id="id_family_rfid_ajx">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                <button type="button" class="btn btn-primary" id="save_button_rfid">Zapisz zmiany</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
 
@@ -225,9 +296,9 @@
             },
         })
     })
-    //---------------- Delete confirm end
+    //****************** Delete confirm end
 
-
+    //---------------- new perosn modal in family form
     $('#new_person').on('click', function () {
         /* beautify ignore:start */
         var family_id = {{ family.id }}
@@ -241,6 +312,7 @@
         $('#last_name_ajx').removeClass('is-invalid')
     })
 
+    //-------------- Edit perosn modal
     $('#person_modal').on('show.bs.modal', function (e) {
         $('#first_name_ajx').removeClass('is-invalid')
         $('#last_name_ajx').removeClass('is-invalid')
@@ -268,6 +340,7 @@
         }
     })
 
+    //--------------  Save person (New/Edit)
     $('#save_button').on('click', function (e) {
         $('#first_name_ajx').removeClass('is-invalid')
         $('#last_name_ajx').removeClass('is-invalid')
@@ -300,6 +373,88 @@
             }
             if ($('#last_name_ajx').val() == '') {
                 $('#last_name_ajx').addClass('is-invalid')
+            }
+        }
+    })
+
+
+    //--------------- Delete confirm -------------------------
+    $('#deleteConfirmRFID').on('show.bs.modal', function (e) {
+        var button = $(e.relatedTarget)
+        var rfid = button.data('rfid')
+
+        $.ajax({
+            type: 'GET',
+            url: '/rfid/' + rfid + '/delete/',
+            dataType: 'json',
+            success: function (data) {
+                var rfidData = JSON.parse(data)[0].fields
+                $('.rfidNumber').text('Nr: ' + rfidData.rfid_number)
+                $('#rfid').val(rfid)
+
+            },
+            error: function () {
+                $('#errors').val(`error`);
+            }
+
+        })
+    })
+
+    $('#confirmButtonRFID').on('click', function () {
+        var rfid = $('#rfid').val()
+        $.ajax({
+            type: 'POST',
+            url: '/rfid/' + rfid + '/delete/',
+            data: {
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                action: 'post',
+            },
+            success: function () {
+                window.location.reload(false);
+            },
+            error: function (xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+            },
+        })
+    })
+    //****************** Delete confirm end
+
+    //---------------- new rfid modal in family form
+    $('#new_rfid').on('click', function () {
+        /* beautify ignore:start */
+        var family_id = {{ family.id }}
+        /* beautify ignore:end */
+        $('#rfid_error').text('')
+        $('#rfid_ajx').val('')
+        $('#id_family_rfid_ajx').val(family_id)
+        $('#rfid_ajx').removeClass('is-invalid')
+    })
+
+
+    //--------------  Save RFID (New)
+    $('#save_button_rfid').on('click', function (e) {
+        $('#rfid_ajx').removeClass('is-invalid')
+        if ($('#rfid_ajx').val()) {
+            $.ajax({
+                type: 'POST',
+                url: '/rfid/new/',
+                dataType: 'json',
+                data: {
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    rfid: $('#rfid_ajx').val(),
+                    family: $('#id_family_rfid_ajx').val(),
+                    action: 'post',
+                },
+                success: function () {
+                    window.location.reload(false);
+                },
+                error: function () {
+                    $('#rfid_error').text("Podana wartość już istnieje w bazie");
+                }
+            })
+        } else {
+            if ($('#rfid_ajx').val() == '') {
+                $('#first_name_ajx').addClass('is-invalid')
             }
         }
     })
