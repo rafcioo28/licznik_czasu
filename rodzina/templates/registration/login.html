@@ -1,0 +1,42 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Przedszkole</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static "js/script.js" %}"></script>
+</head>
+
+<body>
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="card shadow-lg bg-white rounded" style="width: 350px; height:350px">
+
+            <form method="post">
+                <h5 class="card-header mb-5">Logowanie</h5>
+                <div class="container">
+                    <div class="row form-group">
+                        {% csrf_token %}
+
+                        <label for="id_username" class="col-sm-4 col-form-label col-form-label-sm">Użytkownik</label>
+                        {{ form.username|add_class:"form-control col-sm-6" }}
+                    </div>
+
+                    <div class="row form-group">
+                        <label for="id_password" class="col-sm-4 col-form-label col-form-label-sm">Hasło</label>
+                        {{ form.password|add_class:"form-control col-sm-6" }}
+                    </div>
+                    <div class="pt-5 text-center">
+                        <button type="submit" class="btn btn-primary">Wejście</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+
+</html>

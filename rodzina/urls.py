@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
     ChildrenListView,
     TutorListView,
@@ -18,6 +18,8 @@ from .views import (
 
 
 urlpatterns = [
+    path('system/', include('django.contrib.auth.urls')),
+
     path('children/', ChildrenListView.as_view(), name='children'),
     path('tutor/', TutorListView.as_view(), name='tutor'),
 
